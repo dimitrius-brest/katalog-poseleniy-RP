@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 try:
-    f1 = open("input1.txt","r",encoding="utf-8")
+    f1 = open("input.txt","r",encoding="utf-8")
 except IOError:
     print("Не удалось найти входной файл input.txt")
 
@@ -22,7 +22,7 @@ if iskomoe:
     for name in iskomoe:
         #print("found", iskomoe.index(name), name)
         print(name)
-        str.replace(name, "qqq")
+        str=str.replace(name, "http")
     print(str)
 else:
     print('did not find')
@@ -31,4 +31,3 @@ else:
 
 f1.close()
 f2.close()
-
