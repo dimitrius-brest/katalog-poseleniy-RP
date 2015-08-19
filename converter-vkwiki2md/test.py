@@ -9,25 +9,32 @@ try:
 except IOError:
     print("Не удалось открыть выходной файл output.txt")
 
-#
+import re           # импортируем модуль работы с регулярными выражениями
 
-import re
-ssylka_inner = re.compile("\[\[id.*?\|.*?\]\]")    # [[ | ]]  - нежадный: .*?
-# c = re.compile("id\d*")               # id123455
-str = "* '''Грушка''': [[id70486672|Радимир Ясько-Колтаков]]---[[id123|asdf]]---"
-#iskomoe = re.search(ssylka_inner,str)  # находит только одну
-iskomoe = re.findall(ssylka_inner,str)  # находит все
+str = "* '''Грушка''': [[id70486672|Радимир Ясько-Колтаков]]---[[public123|asdf]]---"
+print(str)
+
+# ---- Замена внутренних ссылок (id, club, public) ----
+
+#ssylka_inner_tpl = re.compile("\[\[.*?\|.*?\]\]")         # [[ | ]] - нежадный: .*?
+ssylka_inner_id = re.compile("\[\[id.*?\|.*?\]\]")         # id      
+ssylka_inner_club = re.compile("\[\[club.*?\|.*?\]\]")     # club
+ssylka_inner_public = re.compile("\[\[public.*?\|.*?\]\]") # public
+ 
+iskomoe = (re.findall(ssylka_inner_id,str) +
+           re.findall(ssylka_inner_club,str) +
+           re.findall(ssylka_inner_public,str))  # находит все id,club,public
 if iskomoe:
-#    print("found", iskomoe.group())
-    for name in iskomoe:
-        #print("found", iskomoe.index(name), name)
-        print(name)
-        str=str.replace(name, "http")
-    print(str)
+    for ssylka in iskomoe:        
+        ssylka_id=ssylka.split("|")[0].replace('[[','')    #выделяем id ссылки
+        ssylka_name=ssylka.split("|")[1].replace(']]','')  #выделяем имя ссылки
+        ssylka_new=('['+ssylka_name+']('+'http://vk.com/'+ssylka_id+')')        
+        str=str.replace(ssylka, ssylka_new)     #заменяем старую ссылку на новую
+    print(str)    
 else:
     print('did not find')
-    
-    
 
+# --------    
+    
 f1.close()
 f2.close()
