@@ -9,32 +9,56 @@ try:
 except IOError:
     print("Не удалось открыть выходной файл output.txt")
 
-import re           # импортируем модуль работы с регулярными выражениями
+import re  # импортируем модуль работы с регулярными выражениями
 
-str = "* '''Грушка''': [[id70486672|Радимир Ясько-Колтаков]]---[[public123|asdf]]---"
-print(str)
+# --- регулярное выражение для заголовков вида: == ййй ==
+zagolovok_level2 = re.compile("==.*==")    # - жадный квантификатор .*
 
-# ---- Замена внутренних ссылок (id, club, public) ----
-
-#ssylka_inner_tpl = re.compile("\[\[.*?\|.*?\]\]")         # [[ | ]] - нежадный: .*?
+# --- регулярные выражения для внутренних ссылок вида [[id**|**]], [[club**|**]], [[public**|**]]
+#ssylka_inner_tpl = re.compile("\[\[.*?\|.*?\]\]")         # [[ | ]] - нежадный кватнификатор .*?
 ssylka_inner_id = re.compile("\[\[id.*?\|.*?\]\]")         # id      
 ssylka_inner_club = re.compile("\[\[club.*?\|.*?\]\]")     # club
 ssylka_inner_public = re.compile("\[\[public.*?\|.*?\]\]") # public
- 
-iskomoe = (re.findall(ssylka_inner_id,str) +
-           re.findall(ssylka_inner_club,str) +
-           re.findall(ssylka_inner_public,str))  # находит все id,club,public
-if iskomoe:
-    for ssylka in iskomoe:        
-        ssylka_id=ssylka.split("|")[0].replace('[[','')    #выделяем id ссылки
-        ssylka_name=ssylka.split("|")[1].replace(']]','')  #выделяем имя ссылки
-        ssylka_new=('['+ssylka_name+']('+'http://vk.com/'+ssylka_id+')')        
-        str=str.replace(ssylka, ssylka_new)     #заменяем старую ссылку на новую
-    print(str)    
-else:
-    print('did not find')
 
-# --------    
+# --- регулярное выражение для внешних ссылок вида  [http**|**]
+ssylka_outer = re.compile("\[http.*?\|.*?\]")
+
+# --------
+
+for stroka in f1.readlines():           #читаем входной файл построчно
+    # ---- Замена заголовков
+    if re.match(zagolovok_level2, stroka):        
+        stroka = stroka.replace("==","##",1)
+        stroka = stroka.replace("==", "")        
     
+    # ---- Замена жирного шрифта и курсива ----
+    stroka = stroka.replace("'''",'**') # жирный шрифт - переделать в регулярные выражения!
+    stroka = stroka.replace("''",'*')   # курсив       - переделать в регулярные выражения!
+
+    # ---- Замена внутренних ссылок (id, club, public) ----
+    iskomoe = (re.findall(ssylka_inner_id, stroka) +
+               re.findall(ssylka_inner_club, stroka) +
+               re.findall(ssylka_inner_public, stroka))  # находим все id,club,public
+    if iskomoe:
+        for ssylka in iskomoe:        # перебираем найденные ссылки в строке
+            ssylka_id = ssylka.split("|")[0].replace('[[','')    #выделяем id ссылки
+            ssylka_name = ssylka.split("|")[1].replace(']]','')  #выделяем имя ссылки
+            ssylka_new = ('['+ssylka_name+']('+'http://vk.com/'+ssylka_id+')')        
+            stroka = stroka.replace(ssylka, ssylka_new)     #заменяем старую ссылку на новую
+
+    # ---- Замена внешних ссылок [http**|**] ----
+    iskomoe2 = re.findall(ssylka_outer, stroka)
+    if iskomoe2:        
+        for ssylka2 in iskomoe2:            
+            ssylka2_id = ssylka2.split("|")[0].replace('[http','http')
+            ssylka2_name = ssylka2.split("|")[1].replace(']','')
+            ssylka2_new = '['+ssylka2_name+']('+ssylka2_id+')'
+            stroka = stroka.replace(ssylka2, ssylka2_new)                    
+
+    # ---- Запись преобразованной строки в выходной файл ----
+    f2.write(stroka)
+
+# --------     
+
 f1.close()
 f2.close()
