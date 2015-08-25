@@ -23,11 +23,14 @@ ssylka_inner_public = re.compile("\[\[public.*?\|.*?\]\]") # public
 # --- регулярное выражение для внешних ссылок вида  [http**|**]
 ssylka_outer = re.compile("\[http.*?\|.*?\]")
 
+# --- регулярное выражение для вставки переноса на другую строку (если заканчивается на ":" + пробелы)
+perenos = re.compile(":\s*$")
+
 # --------
 
 for stroka in f1.readlines():           #читаем входной файл построчно
     # ---- Замена заголовков
-    if re.match(zagolovok_level2, stroka):        
+    if re.match(zagolovok_level2, stroka):
         stroka = stroka.replace("==","##",1)
         stroka = stroka.replace("==", "")        
     
@@ -55,8 +58,11 @@ for stroka in f1.readlines():           #читаем входной файл п
             ssylka2_new = '['+ssylka2_name+']('+ssylka2_id+')'
             stroka = stroka.replace(ssylka2, ssylka2_new)                    
 
-    # ---- Запись преобразованной строки в выходной файл ----
-    f2.write(stroka)
+    # ---- Запись преобразованной строки в выходной файл ----    
+    if re.search(perenos, stroka):
+        f2.write('\n' + stroka)
+    else:
+        f2.write(stroka)
 
 # --------     
 
