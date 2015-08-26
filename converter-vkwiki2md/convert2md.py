@@ -12,10 +12,10 @@ except IOError:
 import re  # импортируем модуль работы с регулярными выражениями
 
 # --- регулярное выражение для заголовков вида: == ййй ==
-zagolovok_level2 = re.compile("==.*==")    # - жадный квантификатор .*
+zagolovok_level2 = re.compile("==.*==")    #    жадный квантификатор .*
 
 # --- регулярные выражения для внутренних ссылок вида [[id**|**]], [[club**|**]], [[public**|**]]
-#ssylka_inner_tpl = re.compile("\[\[.*?\|.*?\]\]")         # [[ | ]] - нежадный кватнификатор .*?
+#ssylka_inner_tpl = re.compile("\[\[.*?\|.*?\]\]")         # [[ | ]]    нежадный кватнификатор .*?
 ssylka_inner_id = re.compile("\[\[id.*?\|.*?\]\]")         # id      
 ssylka_inner_club = re.compile("\[\[club.*?\|.*?\]\]")     # club
 ssylka_inner_public = re.compile("\[\[public.*?\|.*?\]\]") # public
