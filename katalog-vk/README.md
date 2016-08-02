@@ -1,6 +1,6 @@
 Здесь содежится исходный код Каталога в формате вики-Вконтакте  
 
-Последнее обновление: **15.03.2016**
+Последнее обновление: **02.08.2016**
 
 * [katalog-Russia](https://github.com/dimitrius-brest/katalog-poseleniy-RP/blob/master/katalog-vk/katalog-Russia) - Каталог поселений России *(см. [оригинал](https://vk.com/page-13589694_48705979))*
 * [katalog-non-Russia](https://github.com/dimitrius-brest/katalog-poseleniy-RP/blob/master/katalog-vk/katalog-non-Russia) - Каталог поселений других стран, кроме России *(см. [оригинал](https://vk.com/page-13589694_48705980))*
